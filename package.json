@@ -1,0 +1,24 @@
+{
+  "name": "JSSandBox",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/yoyoyousei/JSSandBox",
+  "author": "yoyoyousei <atom.soichi0407@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.5.1",
+    "should": "^13.2.1",
+    "underscore": "^1.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "mocha": "^5.1.1",
+    "mochawesome": "^3.0.2"
+  },
+  "scripts": {
+    "test":
+      "mocha --recursive -R mochawesome --reporter-options reportDir=test,reportName=testReport.html,overwrite=true",
+    "seeReport": "open ./test/mochawesome.html"
+  }
+}
