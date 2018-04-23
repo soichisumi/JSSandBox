@@ -11,18 +11,13 @@
     "underscore": "^1.9.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-flow": "^6.23.0",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
-    "flow-bin": "^0.70.0",
     "mocha": "^5.1.1",
     "mochawesome": "^3.0.2"
   },
   "scripts": {
     "test": "mocha --recursive -R mochawesome --reporter-options reportDir=test,reportName=testReport.html,overwrite=true",
-    "seeReport": "open ./test/mochawesome.html",
-    "build": "babel src/ -d lib/",
-    "prepublish": "yarn run build"
+    "seeReport": "open ./test/mochawesome.html"
   }
 }
