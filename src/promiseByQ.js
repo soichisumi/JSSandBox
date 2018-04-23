@@ -1,3 +1,5 @@
+/* @flow */
+
 const Q = require('q');
 
 module.exports = PromiseByQ;

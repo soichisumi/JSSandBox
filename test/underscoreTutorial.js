@@ -1,4 +1,4 @@
-const target = require('../underscoreTutorial');
+const target = require('../src/underscoreTutorial');
 const should = require('should');
 
 describe('doubleAll', function() {
