@@ -80,10 +80,12 @@ describe('basic types', function() {
   });
   it('forEach continue', () => {
     let arr = [1, 2, 3, 4];
+    let res = [];
     arr.forEach((val) => {
       if (val === 3) return;
-      console.log(val);
+      res.push(val);
     });
+    res.should.deepEqual([1, 2, 4]);
   });
 });
 // 非promiseでもthenで繋げるのかと、(resolve, reject)あたり
@@ -140,4 +142,65 @@ describe('promise', () => {
         })
     );
   });
+  // 途中でcatchを入れてもthenのchainは終わらない
+  it('途中でcatch', () => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+
+    p()
+      .then((num) => {
+        return new Promise((resolve, reject) => {
+          console.log(`num: ${num}`);
+          if (num === 5) {
+            reject('だめーーーーー');
+          }
+          resolve(num);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      })
+      .then((num) => {
+        console.log(`とりあえずリジェクトを投げるところ`);
+        return new Promise((resolve, reject) => {
+          reject('とりあえずリジェクト');
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+  it('reject後のthenの処理は飛ぶ', () => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+    p()
+      .then((num) => {
+        return new Promise((resolve, reject) => {
+          console.log(`num: ${num}`);
+          if (num === 5) {
+            reject('だめーーーーー');
+          }
+          resolve(num);
+        });
+      })
+      .then((num) => {
+        should.fail(); // ここにはこない
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+  // it('途中でcatch', () => {
+  //   let Q = require('q');
+  //   Q.fcall(()=>{
+
+  //   })
+  // });
 });
