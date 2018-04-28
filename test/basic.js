@@ -162,7 +162,6 @@ describe('promise', () => {
       })
       .catch((err) => {
         console.log(err);
-        return;
       })
       .then((num) => {
         console.log(`とりあえずリジェクトを投げるところ`);
@@ -195,6 +194,33 @@ describe('promise', () => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  });
+  it('catchでchainをbreakしたい', () => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+    p()
+      .then((num) => {
+        return new Promise((resolve, reject) => {
+          console.log(`num: ${num}`);
+          if (num === 5) {
+            reject('だめーーーーー');
+          }
+          resolve(num);
+        });
+      })
+      // onRejectedが設定されていれば、そこでとまる
+      .then(
+        (num) => {},
+        (err) => {
+          console.log('onrejected');
+        }
+      )
+      .catch((err) => {
+        should.fail(); // ここにもこない
       });
   });
   // it('途中でcatch', () => {
