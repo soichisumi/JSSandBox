@@ -96,41 +96,48 @@ describe('promise', () => {
     return (
       a
         .then((num) => {
-          console.log(`a then ${num}`);
           Promise.resolve('result');
           num.should.equal(5);
         })
-        // Promise.resolve で chain
+        // Promise.resolve で 次の段に値は渡らない
         .then((s) => {
-          console.log(`second then ${s}`);
-          // return {
-          //   x: 'yoyo',
-          // };
-
-          should.be.undefined(s);
-          Promise.resolve();
+          should(s).be.undefined();
         })
-        // ただのreturn
         .then((obj) => {
-          console.log(`third then ${obj.x}`);
-          should.be.equal(obj);
-          Promise.resolve();
+          should(obj).be.undefined();
         })
     );
   });
   it('resolve, reject関数を持っていなくてもchainできるが、値は渡せない', () => {
-    return new Promise((resolve, reject) => {
-      resolve(5);
-    })
-      .then((num) => {
-        Promise.resolve('result');
-        num.should.equal(5);
+    return (
+      new Promise((resolve, reject) => {
+        resolve(5);
       })
-      .then((s) => {
-        should(s).be.undefined();
-      })
-      .then((s) => {
-        should(s).be.undefined();
-      });
+        .then((num) => {
+          Promise.resolve('result');
+          num.should.equal(5);
+        })
+        // 前段がpromiseでなくてもchainできる
+        // promiseでない関数でresolveしても次に渡らない
+        .then((s) => {
+          should(s).be.undefined();
+        })
+        // chainできる
+        .then((s) => {
+          should(s).be.undefined();
+        })
+        // chainできるが、前段がpromiseを返してなければresolveは使えない
+        // thenはchainできるだけで、前のthenがpromiseを返して来ているわけではない
+        .then((resolve, reject) => {
+          should(resolve).be.undefined();
+          // resolve, rejectできるのはpromiseでラップされた関数のみ
+          return new Promise((resolve, reject) => {
+            resolve('わいわい');
+          });
+        })
+        .then((s) => {
+          s.should.equal('わいわい');
+        })
+    );
   });
 });
