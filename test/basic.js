@@ -223,10 +223,87 @@ describe('promise', () => {
         should.fail(); // ここにもこない
       });
   });
-  // it('途中でcatch', () => {
-  //   let Q = require('q');
-  //   Q.fcall(()=>{
 
-  //   })
+  // 途中でcatchを入れてもthenのchainは終わらない
+  it('chainの途中でcatchしたかったらonRejectedのみの', () => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+
+    p()
+      .then((num) => {
+        return new Promise((resolve, reject) => {
+          console.log(`num: ${num}`);
+          if (num === 5) {
+            reject('だめーーーーー');
+          }
+          resolve(num);
+        });
+      })
+      .then(null, (err) => {
+        console.log(err);
+      })
+      .then((num) => {
+        console.log(`とりあえずリジェクトを投げるところ`);
+        return new Promise((resolve, reject) => {
+          reject('とりあえずリジェクト');
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  // 未実装
+  // it('promiseのエラーハンドリングのベストプラクティス', () => {
+  //   let p = () => {
+  //     throw new
+  //     return new Promise((rs, rj) => {
+  //       ;
+  //     });
+  //   };
+
+  //   p()
+  //     .then((num) => {
+  //       return new Promise((resolve, reject) => {
+  //         console.log(`num: ${num}`);
+  //         if (num === 5) {
+  //           reject('だめーーーーー');
+  //         }
+  //         resolve(num);
+  //       });
+  //     })
+  //     .then(null, (err) => {
+  //       console.log(err);
+  //     })
+  //     .then((num) => {
+  //       console.log(`とりあえずリジェクトを投げるところ`);
+  //       return new Promise((resolve, reject) => {
+  //         reject('とりあえずリジェクト');
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
   // });
+
+  it('promiseのエラーハンドリングのベストプラクティス', () => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+
+    return p()
+      .then((num) => {
+        return new Promise((resolve, reject) => {
+          reject('だめ');
+        });
+      })
+      .then(null, (err) => {
+        should(err).be.equal('だめ');
+      });
+  });
 });
