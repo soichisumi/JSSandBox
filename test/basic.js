@@ -1,7 +1,7 @@
 const should = require('should');
 
-describe('basic types', function() {
-  it('array - map reduce', function() {
+describe('basic types', function () {
+  it('array - map reduce', function () {
     let arr = [1, 4, 45, 8];
 
     let res = arr
@@ -55,7 +55,7 @@ describe('basic types', function() {
     // lineReader.on('line', (l) => {
     //   console.log(l);
     // });
-    require('fs').readFile('./test/test.txt', 'utf8', function(err, data) {
+    require('fs').readFile('./test/test.txt', 'utf8', function (err, data) {
       if (err) {
         throw err;
       }
@@ -87,7 +87,14 @@ describe('basic types', function() {
     });
     res.should.deepEqual([1, 2, 4]);
   });
+  it('Error class', () => {
+    let e = new Error('this is error');
+    console.log(JSON.stringify(e));
+    e.message.should.equal('this is error');
+    e.name.should.equal('Error');
+  });
 });
+
 // 非promiseでもthenで繋げるのかと、(resolve, reject)あたり
 describe('promise', () => {
   it('simple', () => {
@@ -214,7 +221,7 @@ describe('promise', () => {
       })
       // onRejectedが設定されていれば、そこでとまる
       .then(
-        (num) => {},
+        (num) => { },
         (err) => {
           console.log('onrejected');
         }
@@ -306,4 +313,43 @@ describe('promise', () => {
         should(err).be.equal('だめ');
       });
   });
+
+  it('catchってrejectもerrorのcatchするんですか', (done) => {
+    let p = () => {
+      return new Promise((rs, rj) => {
+        rs(5);
+      });
+    };
+
+    p()
+      .then((num) => {
+        throw new Error('error');
+      })
+      .then(() => {
+        fail()
+      })
+      .catch((err) => {
+        // console.log(err);
+        done()
+        // err.messageshould(err).be.equal('だめ');
+      })
+      .then(() => { fail() })
+  });
 });
+
+describe('failhookテスト', ()=>{
+  it('fail', ()=>{
+    fail()
+  })
+  it('succeed', ()=>{
+  })
+  afterEach(function() {
+    // console.log(JSON.stringify(this));
+
+    if(this.currentTest.state==='failed'){
+      console.log('しっぱいした')
+    }else{
+      console.log("成功した")
+    }
+  })
+})

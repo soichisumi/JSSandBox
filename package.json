@@ -16,10 +16,11 @@
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "mocha": "^5.1.1",
-    "mochawesome": "^3.0.2"
+    "mochawesome": "^3.0.2",
+    "testdouble": "^3.8.0"
   },
   "scripts": {
-    "test": "mocha --recursive -R mochawesome --reporter-options reportDir=test,reportName=testReport.html,overwrite=true",
-    "seeReport": "open ./test/mochawesome.html"
+    "test": "mocha --recursive -R mochawesome --reporter-options reportDir=report,reportName=testReport.html,overwrite=true",
+    "seeReport": "open ./report/mochawesome.html"
   }
 }
